@@ -1,0 +1,89 @@
+
+<html>
+<head>
+  <title>A Leaflet map!</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+  <script src="https://nlmaps.nl/dist/nlmaps.iife.js"></script>
+
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static "/base/css/base.css" %}" type="text/css"/>
+<style>
+    #map{ height: 100% }
+</style>
+
+</head>
+<body>
+
+  <div id="nlmaps-holder"></div>
+
+<script>
+    var nlMapsHolder = document.getElementById('nlmaps-holder');
+    nlMapsHolder.style.height = '100%'; // Change to required height
+    
+    var opts = {
+        style: 'grijs',
+        target: 'nlmaps-holder',
+        center: {
+            longitude: 6.585402,
+            latitude: 52.386392
+        },
+        overlay: 'false',
+        marker: false,
+        zoom: 8,
+        search: true
+    };
+    var map = nlmaps.createMap(opts);
+</script>
+
+<!--Get data and make figures-->
+<script type="text/javascript">
+    var request = new XMLHttpRequest();
+    request.open('GET','static/geodata/test.json', true);
+    request.onload = function(){
+        if (request.status >= 200 && request.status < 400){
+            // success
+            var data = JSON.parse(request.responseText);
+          console.log('Received OK!')
+        //  Work with JSON data here
+        console.log(data)
+
+        console.log('GeoJSON: ',L.geoJSON)        
+        console.log('Map    :',map)
+        var myLayer = L.geoJSON().addTo(map);
+        myLayer.addData(data);
+        
+        } else {
+            // made connection, got error
+            console.log(request.responseText)
+        }
+    };
+    request.onerror = function () {
+        console.log('Error receiving data')
+    };
+    request.send();
+</script>
+
+
+</body>
+</html>
+
+
+
+<!--   <div id="map"></div>
+
+  <script>
+
+  // initialize the map
+  var map = L.map('map').setView([42.35, -71.08], 13);
+
+  // load a tile layer
+  L.tileLayer('http://tiles.mapc.org/basemap/{z}/{x}/{y}.png',
+    {
+      attribution: 'Tiles by <a href="http://mapc.org">MAPC</a>, Data by <a href="http://mass.gov/mgis">MassGIS</a>',
+      maxZoom: 17,
+      minZoom: 9
+    }).addTo(map);
+
+  </script>
+ -->
