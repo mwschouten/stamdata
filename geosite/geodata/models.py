@@ -12,6 +12,7 @@ class Source(models.Model):
 class Object(models.Model):
     name = models.CharField(max_length=200)
     source = models.ForeignKey(Source, on_delete=models.CASCADE)
+    otype = models.CharField(max_length=20) 
     jsontext = models.TextField()
 
     def __str__(self):
