@@ -1,20 +1,3 @@
-sidepanel.html
-
-<html>
-<head>
-  <title>A Leaflet map!</title>
-<!--   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.css"/>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.js"></script>
- -->  
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css">
-<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
-<script src="https://nlmaps.nl/dist/nlmaps.iife.js"></script>
-
- <style>
-    #map{ height: 100% }
-  </style>
-</head>
-<body>
 
 <button class="openbtn" onclick="openNav()">&#9776; Toggle Sidepanel</button> 
 <h2>Collapsed Sidepanel</h2>
@@ -34,9 +17,6 @@ sidepanel.html
   }
 </script>
 
-
-<div id="nlmaps-holder"></div>
-
 <div id="mySidepanel" class="sidepanel">
   <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
   <a href="#">About</a>
@@ -44,51 +24,3 @@ sidepanel.html
   <a href="#">Clients</a>
   <a href="#">Contact</a>
 </div>
-
-
-
-
-
-
-<script>
-    var nlMapsHolder = document.getElementById('nlmaps-holder');
-    nlMapsHolder.style.height = '100%'; // Change to required height
-    
-    var opts = {
-        style: 'grijs',
-        target: 'nlmaps-holder',
-        center: {
-            longitude: 6.585402,
-            latitude: 52.386392
-        },
-        overlay: 'false',
-        marker: false,
-        zoom: 8,
-        search: true
-    };
-    var map = nlmaps.createMap(opts);
-</script>
-    
-</body>
-</html>
-
-
-
-
-<!--   <div id="map"></div>
-
-  <script>
-
-  // initialize the map
-  var map = L.map('map').setView([42.35, -71.08], 13);
-
-  // load a tile layer
-  L.tileLayer('http://tiles.mapc.org/basemap/{z}/{x}/{y}.png',
-    {
-      attribution: 'Tiles by <a href="http://mapc.org">MAPC</a>, Data by <a href="http://mass.gov/mgis">MassGIS</a>',
-      maxZoom: 17,
-      minZoom: 9
-    }).addTo(map);
-
-  </script>
- -->

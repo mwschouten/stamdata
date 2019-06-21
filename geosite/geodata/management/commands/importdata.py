@@ -18,18 +18,33 @@ class Command(BaseCommand):
 
         # Source item
         source_text = options['description'] or options['filename']
-        s,created = Source.objects.get_or_create(source_text=source_text)
-        if not created:
-        	# remove all old, create new version of source item
+        ss = Source.objects.filter(source_text=source_text)
+        for s in ss:
+            # remove all old, create new version of source item
             oo = Object.objects.filter(source=s).delete()
-            s = Source.objects.create(source_text=source_text)
+        s = Source.objects.create(source_text=source_text)
 
         with open(options['filename'], 'r') as f:
             data = json.load(f)
         # self.stdout.write(', '.join([i[0] for i in data['objects']]))
 
-        for i in data['objects']:
-        	Object.objects.create(source=s,
-        		name = i[0],
-        		otype=i[1],
-        		jsontext=i[2])
+        # Create the objects
+        oo = [Object.objects.create(source=s,
+                                    name = d[0],
+                                    otype=d[1],
+                                    jsontext=d[2]) 
+                for d in data['objects']]
+        self.stdout.write('Created objects')
+
+        for d in data['info']:
+            Info.objects.create(item=oo[d[2]],
+                        key=d[0],
+                        value=d[1])
+        self.stdout.write('Created info')
+
+        for d in data['links']:
+            Link.objects.create(
+                        o0=oo[d[0]],
+                        o1=oo[d[1]],
+                        ltype=d[2])
+        self.stdout.write('Created links')

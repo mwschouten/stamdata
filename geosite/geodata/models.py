@@ -18,6 +18,15 @@ class Object(models.Model):
     def __str__(self):
         return self.name
 
+class Info(models.Model):
+    item = models.ForeignKey(Object, on_delete=models.CASCADE)
+    key = models.CharField(max_length=200)
+    value = models.CharField(max_length=200)
+
+class Link(models.Model):
+    o0 = models.ForeignKey(Object, related_name='obj_from', on_delete=models.CASCADE)
+    o1 = models.ForeignKey(Object, related_name='obj_to', on_delete=models.CASCADE)
+    ltype = models.CharField(max_length=3)
 
 
 
