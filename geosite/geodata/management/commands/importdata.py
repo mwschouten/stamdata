@@ -29,22 +29,39 @@ class Command(BaseCommand):
         # self.stdout.write(', '.join([i[0] for i in data['objects']]))
 
         # Create the objects
-        oo = [Object.objects.create(source=s,
+
+        def make_object(d):
+            if d[3]:
+                return Object.objects.create(source=s,
                                     name = d[0],
                                     otype=d[1],
-                                    jsontext=d[2]) 
-                for d in data['objects']]
-        self.stdout.write('Created objects')
+                                    jsontext=d[2],
+                                    west=d[3][0],
+                                    south=d[3][1],
+                                    east=d[3][2],
+                                    north=d[3][3],
+                                    )
+            else:
+                return Object.objects.create(source=s,
+                                    name = d[0],
+                                    otype=d[1],
+                                    jsontext=d[2])    
 
-        for d in data['info']:
-            Info.objects.create(item=oo[d[2]],
-                        key=d[0],
-                        value=d[1])
+
+        oo = [make_object(d) for d in data['objects']]
+    
+        self.stdout.write('Created {} objects'.format(len(oo)))
+        # for i,o in enumerate(oo):
+        #     self.stdout.write("{} : {} ({}) ({})".format(i,o.name,o.otype,data['objects'][i]))
+
+
+        Info.objects.bulk_create([Info(item=oo[d[2]],key=d[0],value=d[1]) 
+                                        for d in data['info']])
         self.stdout.write('Created info')
 
-        for d in data['links']:
-            Link.objects.create(
-                        o0=oo[d[0]],
-                        o1=oo[d[1]],
-                        ltype=d[2])
+
+        Link.objects.bulk_create([Link(o0=oo[d[0]],o1=oo[d[1]],ltype=d[2]) 
+                                        for d in data['links']])
         self.stdout.write('Created links')
+
+

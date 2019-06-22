@@ -87,10 +87,19 @@ class nlogdata(object):
         self.objects = []
         self.info = []
         self.links = []
-        self.operators = NumberedItems()        
 
         self.vergunningen()
         self.velden()
+
+    def get_object_index(self,name,otype,geostr="",bounds=[]):
+
+        for i,item in enumerate(self.objects):
+            if item[0]==name and item[1]==otype:
+                return i
+        self.objects.append((name,otype,geostr,bounds))
+        return len(self.objects)-1
+
+
 
     def vergunningen(self):
 
@@ -110,25 +119,25 @@ class nlogdata(object):
      
                 #vergunning object
                 geostr = geo2str(geom.simplify(0.001))
-                self.objects.append((name,otype,geostr,geom.bounds))
-                idx = len(self.objects)-1
+                idx = self.get_object_index(name,otype,geostr,geom.bounds)
                 
                 # information items
                 self.info.extend([(k,v,idx)  
                     for k,v in data.items()
-                    if str(v) is not '-'])
+                    if str(v) != '-'])
         
                 # Make links:
                 # Vergunninghouders
-                vgh = [i.strip() for i in data['vergunninghouders'].split(',') if i is not '-']
+                vgh = [i.strip() for i in data['vergunninghouders'].split(',') if i != '-']
                 for v in vgh:
-                    m = self.operators.getorcreate(v)                    
+                    m = self.get_object_index(v,'operator')
                     self.links.append((idx,m,'PMH'))
-              
+                    print(idx,m,name)
+                
                 # Operator
                 name = data['uitvoerder']
-                if name is not '-':
-                    m = self.operators.getorcreate(v)                    
+                if name != '-':
+                    m = self.get_object_index(name,'operator')
                     self.links.append((idx,m,'OPR'))
  
     
@@ -154,13 +163,15 @@ class nlogdata(object):
                 # use fuzzy match when it seemed needed, defaults to normal own
                 licence_name = field2licence.get(name,data['licence area'])
                 ilic = self.licence_names.index(licence_name)
-            except Exception as ex:
+            except: # Exception as ex:
                 if not data['licence area'] == '-':
                     print('No licence : {} Licence: {}'.format(name,data['licence area']))
                 ilic = None
 
-            m = self.operators.getorcreate(data['operator'])                    
+            m = self.get_object_index(data['operator'],'operator')
             self.links.append((idx,m,'OPR'))
+            if 'Snellius' in name:
+                print('Snellius: ',idx,m,data['operator'])
 
             if ilic is not None:
                 self.links.append((idx,ilic,'ULI'))
@@ -168,14 +179,12 @@ class nlogdata(object):
            # information items
             self.info.extend([(k,v,idx)  
                 for k,v in data.items()
-                if str(v) is not '-'])
+                if str(v) != '-'])
 
     def output(self,filename='nlogdata.json'):
-        data = {
-                'objects':self.objects,
+        data = {'objects':self.objects,
                 'info':self.info,
-                'links':self.links,
-                'operators':self.operators.xx}
+                'links':self.links}
         with open(filename, 'w', encoding='utf-8') as outfile:
             json.dump(data, outfile, ensure_ascii=False, indent=2)
      

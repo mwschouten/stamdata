@@ -14,6 +14,10 @@ class Object(models.Model):
     source = models.ForeignKey(Source, on_delete=models.CASCADE)
     otype = models.CharField(max_length=20) 
     jsontext = models.TextField()
+    west = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
+    east = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
+    south = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
+    north = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
 
     def __str__(self):
         return self.name
