@@ -18,6 +18,41 @@
   <div id="nlmaps-holder"></div>
 
 <script>
+    function GetData(map, layers) {
+      // Load map data for the current map bounds
+      bounds = map.getBounds()
+      console.log('Bounds now:', bounds.toBBoxString())
+
+      var parameters = {
+          bbox: map.getBounds().toBBoxString()
+      };
+      fullUrl = 'geodata/objects/89' +L.Util.getParamString(parameters)
+      console.log('aap',fullUrl)
+
+
+      var request = new XMLHttpRequest();
+      request.open('GET',fullUrl, true);
+      request.onload = function(){
+          if (request.status >= 200 && request.status < 400){
+              // success
+              var data = JSON.parse(request.responseText);
+              console.log('Received OK!')
+              //  Work with JSON data here
+              layers['fields'].clearLayers()
+              layers['fields'].addData(data);      
+              console.log(data.properties.name)  
+          } else {
+              // made connection, got error
+              console.log(request.responseText)
+          }
+      };
+      request.onerror = function () {
+          console.log('Error receiving data')
+      };
+      request.send();
+    }
+
+
     var nlMapsHolder = document.getElementById('nlmaps-holder');
     nlMapsHolder.style.height = '100%'; // Change to required height
     
@@ -34,34 +69,19 @@
         search: true
     };
     var map = nlmaps.createMap(opts);
-</script>
 
-<!--Get data and make figures-->
-<script type="text/javascript">
-    var request = new XMLHttpRequest();
-    request.open('GET','static/geodata/test.json', true);
-    request.onload = function(){
-        if (request.status >= 200 && request.status < 400){
-            // success
-            var data = JSON.parse(request.responseText);
-          console.log('Received OK!')
-        //  Work with JSON data here
-        console.log(data)
+    layers = {'fields':L.geoJSON().addTo(map),
+              'locs':L.geoJSON().addTo(map),
+              'putten':L.geoJSON().addTo(map)
+              }
 
-        console.log('GeoJSON: ',L.geoJSON)        
-        console.log('Map    :',map)
-        var myLayer = L.geoJSON().addTo(map);
-        myLayer.addData(data);
-        
-        } else {
-            // made connection, got error
-            console.log(request.responseText)
-        }
-    };
-    request.onerror = function () {
-        console.log('Error receiving data')
-    };
-    request.send();
+    map.on("moveend", function () {
+      GetData( map, layers )
+    });
+
+    console.log(map)
+    GetData(map,layers)
+
 </script>
 
 

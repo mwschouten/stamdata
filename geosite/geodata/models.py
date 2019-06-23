@@ -19,6 +19,11 @@ class Object(models.Model):
     south = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
     north = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
 
+
+    def as_feature(self):
+        return '{{"type":"Feature","properties":{{"name":"{}","id":"{}","type":"{}"}},"geometry":{}}}'.format(
+            self.name,self.id,self.otype,self.jsontext)
+
     def __str__(self):
         return self.name
 
