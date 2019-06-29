@@ -1,6 +1,14 @@
 from django.http import HttpResponse
 from .models import *
 
+# Helpers
+def collection(oo):
+	""" From a list of objects, make a featurecollection geojson item 
+	"""
+	return '{{"type": "FeatureCollection","features": [{}]}}'.format(
+		','.join([i.as_feature() for i in oo]))
+
+# Views
 def index(request):
     return HttpResponse("Hallo allemaal: geodata app hier")
 
@@ -12,7 +20,7 @@ def info(request,id):
     return JsonResponse(o.infolist())
 
 def objects(request,id):
-    o = Object.objects.get(id=id)
+    # o = Object.objects.get(id=id)
 
     bboxstr = request.GET['bbox']
     wsen = list(map(float,bboxstr.split(',')))
@@ -23,7 +31,9 @@ def objects(request,id):
 
     print('Found objects : ',len(o))
 
-    return HttpResponse(o[0].as_feature())
+    return HttpResponse(collection(o))
+
+
 
 
 
