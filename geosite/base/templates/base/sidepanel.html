@@ -1,26 +1,143 @@
+<!DOCTYPE html>
+<html ng-app="demoapp">
+  <head>
 
-<button class="openbtn" onclick="openNav()">&#9776; Toggle Sidepanel</button> 
-<h2>Collapsed Sidepanel</h2>
-<p>Content...</p>
+    {% load static %}
+    <link rel="icon" 
+      type="image/png" 
+      href="{% static "/base/img/ic_launcher.png" %}">
 
-<script>
-  /* Set the width of the sidebar to 250px (show it) */
-  function openNav() {
-    console.log('Doe open')
-    document.getElementById("mySidepanel").style.width = "250px";
-  }
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
 
-  /* Set the width of the sidebar to 0 (hide it) */
-  function closeNav() {
-    console.log('Doe dicht')
-    document.getElementById("mySidepanel").style.width = "0";
-  }
-</script>
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-leaflet-directive/0.10.0/angular-leaflet-directive.min.js"></script>
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.css">
+    <link rel="stylesheet" type="text/css" href="{% static "/base/css/base.css" %}"/>
 
-<div id="mySidepanel" class="sidepanel">
-  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-  <a href="#">About</a>
-  <a href="#">Services</a>
-  <a href="#">Clients</a>
-  <a href="#">Contact</a>
+    <script>
+
+      var app = angular.module("demoapp", ["leaflet-directive"]);
+
+      app.controller("GeoJSONController", [ '$scope', '$http', 'leafletData', 
+        function($scope, $http, leafletData) {
+
+
+        // var bounds = leafletBoundsHelpers.createBoundsFromArray([
+        //     [ 51.5, 4.5 ],
+        //     [ 53.5, 6.5 ]
+        // ]);
+        var bounds = {
+            southWest: {
+                lat: 51.5,
+                lng: 4.5,
+            },
+            northEast: {
+                lat: 53.5,
+                lng: 6.5,
+            }
+        }
+
+        angular.extend($scope, {
+
+            tiles: {
+                url: "https://geodata.nationaalgeoregister.nl/tiles/service/wmts/brtachtergrondkaartgrijs/EPSG:3857/{z}/{x}/{y}.png"
+            },
+            bounds: bounds,
+            center: {},
+            defaults: {
+                scrollWheelZoom: true
+            },
+            events: {
+              map: {
+                  enable: ['zoomend', 'dragend', 'click'],
+                  logic: 'emit'
+              }
+            },
+            fields:['all','for','now'],
+            groente:'paksoi'
+        });
+
+
+        $scope.update = function(){
+          // Get the countries geojson data from a JSON
+          var bb = $scope.bounds.southWest.lng + ',' + $scope.bounds.southWest.lat +
+                ',' + $scope.bounds.northEast.lng+ ',' + $scope.bounds.northEast.lat
+          console.log("AAP ",bb )
+          $http.get("geodata/objects/89",{'params': {'bbox':bb}}).success(function(data, status) {
+              angular.extend($scope, {
+                  geojson: {
+                      data: data,
+                      style: {
+                          fillColor: "green",
+                          weight: 1,
+                          opacity: 0.7,
+                          color: 'green',
+                          dashArray: '1',
+                          fillOpacity: 0.5
+                      }
+                  }
+              });
+
+              $scope.fields = []
+              for (var item of data.features) {
+                 $scope.fields.push({'name':item.properties.name,'id':item.properties.id})
+               }
+               console.log($scope.fields)
+          });          
+        }
+
+
+        $scope.eventDetected = "No events yet...";
+
+        $scope.$on('leafletDirectiveMap.zoomend', function(event){
+            $scope.eventDetected = "ZoomEnd";
+            $scope.update()
+        });
+
+        $scope.$on('leafletDirectiveMap.dragend', function(event){
+            $scope.update()
+            $scope.eventDetected = "DragEnd";
+        });
+
+        $scope.$on('leafletDirectiveMap.click', function(event){
+            $scope.eventDetected = "Click";
+        });
+
+        $scope.update()
+
+        $scope.clickField = function (input){
+          console.log('Clicked!', input)
+        }
+
+      } ]);
+      </script>
+  </head>
+
+  <body ng-controller="GeoJSONController">
+
+
+<div id="leftCol">
+  {% verbatim %}
+      <ul>
+        <li ng-repeat="fld in fields" ng-click="clickField(fld.id)"><a>{{fld.name}}</a></li>
+      </ul>
+  {% endverbatim %}
 </div>
+
+<div id="content">
+     <leaflet geojson="geojson" defaults="defaults" 
+              tiles="tiles" bounds="bounds" center="center"
+              width="100%" height="800px"
+              event-broadcast="events"></leaflet>
+</div>
+
+
+
+
+
+
+  
+</body>
+</html>
