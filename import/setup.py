@@ -38,7 +38,7 @@ def textrounder(n):
 
     return f
 
-rounder = textrounder(4)
+rounder = textrounder(6)
 
 def geo2str(geo):
     str = json.dumps(mapping(geo))
@@ -101,7 +101,7 @@ class nlogdata(object):
 
 
 
-    def vergunningen(self):
+    def vergunningen(self,simplify=0.001):
 
         self.licence_names=[]
         
@@ -118,7 +118,11 @@ class nlogdata(object):
             for name, data, geom in res:   
      
                 #vergunning object
-                geostr = geo2str(geom.simplify(0.001))
+                if simplify:
+                    geostr = geo2str(geom.simplify(0.001))
+                else:
+                    geostr = geo2str(geom)
+                    
                 idx = self.get_object_index(name,otype,geostr,geom.bounds)
                 
                 # information items
@@ -141,7 +145,7 @@ class nlogdata(object):
                     self.links.append((idx,m,'OPR'))
  
     
-    def velden(self):
+    def velden(self,simplify=0.001):
     
         # Velden
         filename = 'data/' + [i for i in os.listdir('data') if 'Velden' in i][0]
@@ -152,8 +156,9 @@ class nlogdata(object):
         
         for name, data, geom in res:
     
-            #vergunning object
-            geostr = geo2str(geom.simplify(0.001))
+            # object
+            geom=geom.buffer(0.002).buffer(-0.002)
+            geostr = geo2str(geom.simplify(simplify))
             self.objects.append((name,'field',geostr,geom.bounds))
             idx = len(self.objects)-1
     
