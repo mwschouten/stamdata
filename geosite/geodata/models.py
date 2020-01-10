@@ -1,5 +1,5 @@
 from django.db import models
-
+from decimal import Decimal
 # Create your models here.
 
 class Source(models.Model):
@@ -8,7 +8,7 @@ class Source(models.Model):
 
     def __str__(self):
         return '{} {}'.format(self.source_text, self.pub_date.strftime('%D %T'))
-
+    
 class Object(models.Model):
     name = models.CharField(max_length=200)
     source = models.ForeignKey(Source, on_delete=models.CASCADE)
@@ -19,13 +19,17 @@ class Object(models.Model):
     south = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
     north = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
 
-
     def as_feature(self):
-        return '{{"type":"Feature","properties":{{"name":"{}","id":"{}","type":"{}"}},"geometry":{}}}'.format(
-            self.name,self.id,self.otype,self.jsontext)
+        lalo = "[{},{}]".format((self.south+self.north)*Decimal('0.5'),(self.west+self.east)*Decimal('0.5'))
+        return '{{"type":"Feature","properties":{{"name":"{}","id":"{}","type":"{}","lalo":{}}},"geometry":{}}}'.format(
+            self.name,self.id,self.otype,lalo,self.jsontext)        
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        unique_together = [['name','otype']]
+
 
 class Info(models.Model):
     item = models.ForeignKey(Object, on_delete=models.CASCADE)
@@ -36,6 +40,9 @@ class Link(models.Model):
     o0 = models.ForeignKey(Object, related_name='obj_from', on_delete=models.CASCADE)
     o1 = models.ForeignKey(Object, related_name='obj_to', on_delete=models.CASCADE)
     ltype = models.CharField(max_length=3)
+
+    def __str__(self):
+        return "{}  -- ({}) -> {}".format(self.o0.name,self.ltype,self.o1.name)
 
 
 

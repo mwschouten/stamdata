@@ -1,0 +1,138 @@
+
+Putten met eigenaars die niet ook vergunninghouder zijn. Eigenaar + aantal.
+===========================================================================
+
+Deels zijn dit spellingsverschillen: bij de putten wordt nogal slordig de eigenaar aangeduid. Frizia Zout, NAM
+Deels zijn dit niet meer bestaande grootheden. (Rijks opsporing delfstoffen, ROvD)
+Staatstoezicht is ook huidige eigenaar van een put.
+
+                                    Hess : 1
+                                     NAM : 3404
+                                 Tenneco : 14
+                                Petrogas : 13
+                                 Chevron : 166
+                Petrogas E&P Netherlands : 4
+                             Wintershall : 466
+                                   Total : 274
+                                   Mobil : 36
+          Rijksopsporing van Delfstoffen : 65
+                     ECW Geo Andijk B.V. : 5
+                                    TAQA : 193
+       Vermilion Oil and Gas Netherlands : 1
+                   Vertec Treatment Sys. : 1
+                Rijks Geologische Dienst : 8
+                                     TNO : 2
+                                    ARCO : 7
+                           Spirit Energy : 11
+                       Shell Delfstoffen : 3
+                             Frisia Zout : 4
+                             Frizia Zout : 1
+                            Staatsmijnen : 37
+                             TAQA Energy : 1
+   Koninklijke Nederlandse Zoutindustrie : 40
+                               AkzoNobel : 7
+                               Vermilion : 118
+                  Aardwarmte Vierpolders : 2
+       Californie Wijnen Geothermie B.V. : 4
+                Californie Lipzig Gielen : 2
+                      Phillips Petroleum : 9
+                                         : 114
+                                    ROvD : 1
+                Laura en Vereniging N.V. : 3
+                    Oranje Nassau Mijnen : 8
+                     Oranje Nassaumijnen : 2
+                      Oranje Nassau N.V. : 3
+                 Oranje Nassau Mijnen NV : 1
+                        Oranje Nassau II : 1
+                          staatstoezicht : 1
+                         Staatsmijnen NV : 8
+                            Twentse Bank : 2
+            Aktien Verein Mijnveld CLARA : 1
+Aachener Hutte, Aktien Verein Mijnveld CLARA : 1
+                 NV Oranje Nassau Mijnen : 1
+                Oranje Nassaumijnen N.V. : 1
+                     Laura en Vereniging : 9
+                                R.O.V.D. : 2
+                                    ROVD : 1
+                      Mijn Willem-Sophia : 2
+                   NV Mijn Willem Sophie : 1
+                         Gem. Maastricht : 1
+             Brand's bierbrouwerij Wylre : 1
+                      Mijn Willem Sophia : 3
+        MY. CAVANDO ACQUIRO IN DE MEZZEL : 10
+                                     WML : 1
+                         ENCI Maastricht : 1
+HALO Exploration and Production Netherlands B.V. : 1
+         Neptune Energy Netherlands B.V. : 2
+            Vermilion Energy Netherlands : 1
+                            Petro-Canada : 12
+                                    DANA : 24
+                                    Dana : 1
+                                Hamilton : 2
+                                   Bates : 1
+                                 Statoil : 6
+                                     OEH : 1
+                      Sterling Resources : 1
+                                    Agip : 3
+                                  Conoco : 1
+                                     RFD : 2
+                             Mees & Hope : 5
+                                       H : 5
+                 Ned. Energie Ontw. Mij. : 1
+                 Aardwarmte Den Haag VOF : 2
+                        Ce-Ren Beheer BV : 4
+                                    AKZO : 1
+                     Gemeente Maastricht : 2
+                        Gemeente Heerlen : 2
+                Green Well Westland B.V. : 4
+                            Superior Oil : 1
+                                Ultramar : 1
+             ENGIE E&P Nederland B.V.NAM : 1
+                                   ENGIE : 1
+                                 Neptune : 1
+                                     CON : 1
+                                  Signal : 3
+                      Nature's Heat B.V. : 2
+              Aardwarmtecluster 1 KKP BV : 2
+          Provinciale Waterstaat Limburg : 1
+                   Oranje Nassau Energie : 2
+    Oranje-Nassau Energie Nederland B.V. : 8
+                   Oranje-Nassau Energie : 20
+               V.O.F. Geothermie de Lier : 2
+        Warmtebedrijf Bergschenhoek B.V. : 2
+                 Hoogweg Aardwarmte B.V. : 3
+                              Bow Valley : 2
+                       ECW Geoholding BV : 6
+                      ECW Geoholding BV. : 1
+                  ECW Geomanagement B.V. : 4
+                  GeoPower Vastgoed B.V. : 5
+                           ONE-Dyas B.V. : 1
+                                     ONE : 4
+         Northern Petroleum Nederland BV : 1
+             Chemische Industrie Naarden : 1
+                                    Fina : 2
+                     Trias Westland B.V. : 3
+                                     HAI : 1
+                                   Tulip : 3
+                 Wintershall Noordzee BV : 1
+                     Aardwarmte Vogelaer : 2
+                   Ammerlaan Real Estate : 2
+                  Gebr. Duijvestijn B.V. : 4
+               Ammerlaan Geothermie B.V. : 5
+                               Tulip Oil : 2
+          Tulip Oil Netherlands Offshore : 5
+                             PanCanadian : 2
+                              SM Maurits : 3
+                                     DSM : 12
+                 Staatsmijnen Limburg NV : 1
+                    Staatsmijnen Limburg : 2
+                      Staatsmijn Maurits : 1
+                                     GRU : 1
+                                 Amoseas : 1
+                  Thermae Onroerend Goed : 3
+                 A.G. van den Bosch B.V. : 6
+                                    Akzo : 3
+                Visser & Smit Hanab B.V. : 5
+                         Zuidwending VOF : 8
+
+

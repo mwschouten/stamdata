@@ -48,18 +48,16 @@ Relaties = {'PCC' : 'Plan concerns',
             'ULI' : 'Under Licence',
             'PMH' : 'Permit holder',
             'OPR' : 'Operator',
-            'WSH' : 'Well starts here',
-            'WTF' : 'Well to field',
+            'MBW' : 'Wellhead site',
             'OWN' : 'Current owner',
             'FLD' : 'In field'}
-      
 
 
 vg_soorten = {'Opslagvergunning':'vg_opslag',
               'Koolwaterstoffen':'vg_winning_kws',
               'Steenzout':'vg_winning_zout'}
 
-
+object_types = ['OPR','FLD',]
 
 class NumberedItems(object):
     
@@ -91,14 +89,25 @@ class nlogdata(object):
         self.vergunningen()
         self.velden()
 
-    def get_object_index(self,name,otype,geostr="",bounds=[]):
-
+    def get_object_index(self,name,otype,geostr="",bounds=[],
+                         create=True):
+        """ Get the index: get or create the object
+        """
         for i,item in enumerate(self.objects):
+
             if item[0]==name and item[1]==otype:
                 return i
-        self.objects.append((name,otype,geostr,bounds))
-        return len(self.objects)-1
+        if create:
+            self.objects.append((name,otype,geostr,bounds))
+            return len(self.objects)-1
+        else:
+            return None
 
+    def get_object_index_vg(self,name):
+        for i,item in enumerate(self.objects):
+            if item[0]==name and item[1].startswith('vg_'):
+                return i
+        raise Exception('Vergunning not found : {}'.format(name))
 
 
     def vergunningen(self,simplify=0.001):
@@ -167,7 +176,8 @@ class nlogdata(object):
             try:
                 # use fuzzy match when it seemed needed, defaults to normal own
                 licence_name = field2licence.get(name,data['licence area'])
-                ilic = self.licence_names.index(licence_name)
+#                ilic = self.licence_names.index(licence_name)
+                ilic = self.get_object_index_vg(licence_name)
             except: # Exception as ex:
                 if not data['licence area'] == '-':
                     print('No licence : {} Licence: {}'.format(name,data['licence area']))
@@ -225,10 +235,43 @@ class nlogdata(object):
 #    
 #    
 #    
-    
+
+    def save_putten():
+        with open( 'nlogdata.json', 'r') as f:
+            data = json.load(f)
+
+        oprtrs = [i[0] for i in data['objects'] if i[1]=='operator']
+        fields = [i[0] for i in data['objects'] if i[1]=='field']
+
+
+        
+
 if __name__=="__main__":
     N = nlogdata()
-    N.output()
+
+    import check_nlog
+    from collections import defaultdict
+    
+    pp = check_nlog.lees_putten('data/geobor/geobor_20190702.xls')
+    flds = check_nlog.flds
+
+    fld_not_found = defaultdict(list)
+    for name,p in pp.items():
+        data = {f:d for f,d in zip(flds,p)}
+        fld = data['Veld Naam']
+    
+        ifld = N.get_object_index(fld,'field',create=False)
+        if ifld is None:
+            fld_not_found[fld].append(name)
+
+    for fld,names in fld_not_found.items():
+        print('Field not found : {} ({})'.format(fld,len(names)))
+#            pri1nt(data)
+
+
+            
+
+#    N.output()
 
 
 """ NOTES

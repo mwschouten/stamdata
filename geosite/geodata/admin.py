@@ -21,6 +21,7 @@ class ObjectAdmin(admin.ModelAdmin):
     inlines = [
         LinkInlineFrom,LinkInlineTo, InfoInline,
     ]
+    search_fields = ('name', 'otype', )
 
 # Register your models here.
 admin.site.register(Source)

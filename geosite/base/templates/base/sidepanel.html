@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html ng-app="demoapp">
   <head>
-
     {% load static %}
     <link rel="icon" 
       type="image/png" 
@@ -15,129 +14,71 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-leaflet-directive/0.10.0/angular-leaflet-directive.min.js"></script>
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.css">
     <link rel="stylesheet" type="text/css" href="{% static "/base/css/base.css" %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static "/base/css/spinner.css" %}"/>
 
-    <script>
-
-      var app = angular.module("demoapp", ["leaflet-directive"]);
-
-      app.controller("GeoJSONController", [ '$scope', '$http', 'leafletData', 
-        function($scope, $http, leafletData) {
-
-
-        // var bounds = leafletBoundsHelpers.createBoundsFromArray([
-        //     [ 51.5, 4.5 ],
-        //     [ 53.5, 6.5 ]
-        // ]);
-        var bounds = {
-            southWest: {
-                lat: 51.5,
-                lng: 4.5,
-            },
-            northEast: {
-                lat: 53.5,
-                lng: 6.5,
-            }
-        }
-
-        angular.extend($scope, {
-
-            tiles: {
-                url: "https://geodata.nationaalgeoregister.nl/tiles/service/wmts/brtachtergrondkaartgrijs/EPSG:3857/{z}/{x}/{y}.png"
-            },
-            bounds: bounds,
-            center: {},
-            defaults: {
-                scrollWheelZoom: true
-            },
-            events: {
-              map: {
-                  enable: ['zoomend', 'dragend', 'click'],
-                  logic: 'emit'
-              }
-            },
-            fields:['all','for','now'],
-            groente:'paksoi'
-        });
-
-
-        $scope.update = function(){
-          // Get the countries geojson data from a JSON
-          var bb = $scope.bounds.southWest.lng + ',' + $scope.bounds.southWest.lat +
-                ',' + $scope.bounds.northEast.lng+ ',' + $scope.bounds.northEast.lat
-          console.log("AAP ",bb )
-          $http.get("geodata/objects/89",{'params': {'bbox':bb}}).success(function(data, status) {
-              angular.extend($scope, {
-                  geojson: {
-                      data: data,
-                      style: {
-                          fillColor: "green",
-                          weight: 1,
-                          opacity: 0.7,
-                          color: 'green',
-                          dashArray: '1',
-                          fillOpacity: 0.5
-                      }
-                  }
-              });
-
-              $scope.fields = []
-              for (var item of data.features) {
-                 $scope.fields.push({'name':item.properties.name,'id':item.properties.id})
-               }
-               console.log($scope.fields)
-          });          
-        }
-
-
-        $scope.eventDetected = "No events yet...";
-
-        $scope.$on('leafletDirectiveMap.zoomend', function(event){
-            $scope.eventDetected = "ZoomEnd";
-            $scope.update()
-        });
-
-        $scope.$on('leafletDirectiveMap.dragend', function(event){
-            $scope.update()
-            $scope.eventDetected = "DragEnd";
-        });
-
-        $scope.$on('leafletDirectiveMap.click', function(event){
-            $scope.eventDetected = "Click";
-        });
-
-        $scope.update()
-
-        $scope.clickField = function (input){
-          console.log('Clicked!', input)
-        }
-
-      } ]);
-      </script>
+    <script src="{% static "/base/js/mapctrl.js" %}"/></script>
   </head>
 
   <body ng-controller="GeoJSONController">
 
-
-<div id="leftCol">
-  {% verbatim %}
-      <ul>
-        <li ng-repeat="fld in fields" ng-click="clickField(fld.id)"><a>{{fld.name}}</a></li>
-      </ul>
-  {% endverbatim %}
-</div>
-
-<div id="content">
-     <leaflet geojson="geojson" defaults="defaults" 
-              tiles="tiles" bounds="bounds" center="center"
-              width="100%" height="800px"
-              event-broadcast="events"></leaflet>
-</div>
+    <!-- Verbatim: to make django not render the templates (leave for angular)  -->
+    {% verbatim %}
 
 
+      <!-- Overlay spinning wait -->
+      <div ng-class="spinnerstatus">Loading&#8230;</div>
+      
+      <!-- Overlay info box -->
+      <div id="mydiv" class="box" width="200px" height="200px">
+        <div id="mydivheader" class="boxheader"> {{fieldinfo.name}}</div>
+    
+        <table>
+          <tr ng-repeat="(key, value) in fieldinfo.info"><td>{{key}}</td> <td>{{value}}</td></tr>
+          <!-- <div ng-if="islinkedobject(value)" ><td>{{key}}</td> <td>{{value}}</td></div> -->
+        </table>
+      </div>
+
+      <!-- Overlay info box -->
+      <div id="mydiv2" width="200px" height="200px">
+        <div id="mydiv2header"> {{fieldinfo.name}}</div>
+    
+        <table>
+          <tr ng-repeat="(key, value) in fieldinfo.links">
+            <td>{{key}}</td> 
+            <td> 
+              <div ng-repeat="item in value">
+                <a display="block" ng-click="clickField(item[1])">{{item[0]}}</a>
+              </div>
+            </td>
+          </tr>
+          <!-- <div ng-if="islinkedobject(value)" ><td>{{key}}</td> <td>{{value}}</td></div> -->
+        </table>
+      </div>
 
 
 
+      <!-- Left bar -->
+      <div id="leftCol">
+        <ul>
+          <li><strong ng-bind="field.name"></strong></li>
+          <li><label>Search: <input ng-model="searchText"></label></li>
+          <li ng-repeat="fld in fields | filter:searchText">
+            <a display="block" ng-click="clickField(fld)">{{fld.name}}</a></li>
+        </ul>
+      </div>
 
-  
-</body>
+      <!-- map -->
+      <div id="content">
+        <leaflet id="myMap"
+                geojson="geojson" defaults="defaults" 
+                tiles="tiles" bounds="bounds" center="center" markers=markers
+                width="100%" height="800px" events="events"></leaflet>
+      </div>
+
+    {% endverbatim %}
+
+    <!-- Overlay info box -->
+    <script src="{% static "/base/js/drag_div.js" %}"/></script>
+
+  </body>
 </html>
