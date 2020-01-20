@@ -52,7 +52,7 @@ class Command(BaseCommand):
                 o.east = put.Longitude_WGS84
                 o.north = put.Latitude_WGS84
                 o.save()
-                print('  created borehole: ',o.name)
+                # print('  created borehole: ',o.name,o.west,o.south)
 
                 Info.objects.bulk_create(
                         [Info( item=o,key=desc,value=getattr(put,fld)) 
@@ -66,7 +66,16 @@ class Command(BaseCommand):
                     Link.objects.create(o0=o,o1=F.get(put.Veld_Naam),ltype='FLD')
 
                 if put.Mijnbouwwerk_Naam:
-                    Link.objects.create(o0=o,o1=M.get(put.Mijnbouwwerk_Naam),ltype='MBW')
+                    mbw = M.get(put.Mijnbouwwerk_Naam)
+                    if M.last_created:
+                        mbw.jsontext = geobor.point2str(put.Longitude_WGS84,put.Latitude_WGS84)
+                        mbw.west = put.Longitude_WGS84
+                        mbw.south = put.Latitude_WGS84
+                        mbw.east = put.Longitude_WGS84
+                        mbw.north = put.Latitude_WGS84
+                        mbw.save()
+
+                    Link.objects.create(o0=o,o1=mbw,ltype='MBW')
 
             else: # CHECK INFO
 

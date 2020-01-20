@@ -19,8 +19,22 @@ class Object(models.Model):
     south = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
     north = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
 
+    @property
+    def has_geometry(self):
+        return self.north is not None
+    
+
+    @property
+    def lalo(self):
+        try:
+            return float(self.south+self.north)*0.5,float(self.west+self.east)*0.5
+        except:
+            return None
+
     def as_feature(self):
-        lalo = "[{},{}]".format((self.south+self.north)*Decimal('0.5'),(self.west+self.east)*Decimal('0.5'))
+        if self.north is None:
+            return None
+        lalo = "[{:.5f},{:.5f}]".format(*self.lalo)
         return '{{"type":"Feature","properties":{{"name":"{}","id":"{}","type":"{}","lalo":{}}},"geometry":{}}}'.format(
             self.name,self.id,self.otype,lalo,self.jsontext)        
 

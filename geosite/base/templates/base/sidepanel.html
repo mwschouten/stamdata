@@ -26,32 +26,30 @@
 
 
       <!-- Overlay spinning wait -->
-      <div ng-class="spinnerstatus">Loading&#8230;</div>
+      <!-- <div ng-class="spinnerstatus">Loading&#8230;</div> -->
       
       <!-- Overlay info box -->
       <div id="mydiv" class="box" width="200px" height="200px">
-        <div id="mydivheader" class="boxheader"> {{fieldinfo.name}}</div>
+        <div id="mydivheader" class="boxheader">Info {{info.type}} {{info_object.name}}</div>
     
         <table>
-          <tr ng-repeat="(key, value) in fieldinfo.info"><td>{{key}}</td> <td>{{value}}</td></tr>
-          <!-- <div ng-if="islinkedobject(value)" ><td>{{key}}</td> <td>{{value}}</td></div> -->
+          <tr ng-repeat="(key, value) in info.info"><td>{{key}}</td> <td>{{value}}</td></tr>
         </table>
       </div>
 
-      <!-- Overlay info box -->
+      <!-- Overlay LINKED ITEMS box -->
       <div id="mydiv2" width="200px" height="200px">
-        <div id="mydiv2header"> {{fieldinfo.name}}</div>
+        <div id="mydiv2header">Links {{info_object.name}}</div>
     
         <table>
-          <tr ng-repeat="(key, value) in fieldinfo.links">
+          <tr ng-repeat="(key, value) in info.links">
             <td>{{key}}</td> 
             <td> 
               <div ng-repeat="item in value">
-                <a display="block" ng-click="clickField(item[1])">{{item[0]}}</a>
+                <a display="inline" ng-click="clickID(item)">{{item[0]}}</a>
               </div>
             </td>
           </tr>
-          <!-- <div ng-if="islinkedobject(value)" ><td>{{key}}</td> <td>{{value}}</td></div> -->
         </table>
       </div>
 
@@ -62,7 +60,7 @@
         <ul>
           <li><strong ng-bind="field.name"></strong></li>
           <li><label>Search: <input ng-model="searchText"></label></li>
-          <li ng-repeat="fld in fields | filter:searchText">
+          <li ng-repeat="fld in fields | orderBy | filter:searchText " | >
             <a display="block" ng-click="clickField(fld)">{{fld.name}}</a></li>
         </ul>
       </div>
@@ -70,8 +68,8 @@
       <!-- map -->
       <div id="content">
         <leaflet id="myMap"
-                geojson="geojson" defaults="defaults" 
-                tiles="tiles" bounds="bounds" center="center" markers=markers
+                geojson="geojson" defaults="defaults" layers="layers"
+                bounds="bounds" center="center" markers=markers
                 width="100%" height="800px" events="events"></leaflet>
       </div>
 

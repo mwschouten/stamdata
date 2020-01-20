@@ -120,7 +120,12 @@
     #mydiv2 li {
       text-decoration: none;
     }
-
+    
+    .blue {
+        border-radius: 120px;
+        opacity: .75;
+        background-color: #0000FF;
+    }
 
 </style>
 
